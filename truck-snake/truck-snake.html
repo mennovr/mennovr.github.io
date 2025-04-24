@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+    <div style="height: 400px; width: 400px; position: relative;">
+        <canvas id="gameCanvas" width="400" height="400" style="border:1px solid #d3d3d3; position: absolute;"></canvas>
+        <!--position: absolute; top: 200px; left: 200px; transform: translate(-50%, -50%);-->
+        <div id="gameOver" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <h2 style="font-size: 2em; color: red;">Game Over</h2>
+            <button onclick="restartGame()">Retry</button>
+        </div>
+    </div>
+
+    <span id="score" style="display: inline; vertical-align: top;">Score: 0</span>
+    <span>highscores:</span>
+    <form id="highScoreForm" style="display: none;">
+        <input type="text" id="playerNameInput" placeholder="Enter your name">
+        <button type="submit">Submit highscore</button>
+    </form>
+    <ol id="highScoresList"></ol>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const context = canvas.getContext('2d');
+
+        let truck = [{ top: 50, left: 50 }];
+        let direction = 'RIGHT';
+        let container = null;
+        let myInterval = null;
+        let score = 0;
+        let highestScore = 0; // Variable to store the highest score during the game session
+        let lowestHighScore = 0;
+        let imgHead = new Image();
+        let imgHeadLeft = new Image();
+        let imgBody = new Image();
+        let imgContainerSmall = new Image();
+        let imgContainerLarge = new Image();
+        let highScoreForm = document.getElementById('highScoreForm');
+        imgHead.src = 'assets/truck_r.png';
+        imgBody.src = 'assets/trailer.png';
+        imgHeadLeft.src = 'assets/truck_l.png';
+        imgContainerSmall.src = 'assets/ST_KEI_small.png';
+        imgContainerLarge.src = 'assets/OSBX_small.png';
+        
+        let intervalTime = 200; // Initial interval time in milliseconds
+        const stepSize = 23; // Step size to match the width of the truck image
+
+        function updateContainer() {
+            let top = Math.round(Math.random() * (canvas.height - 40) / 20) * 20;
+            let left = Math.round(Math.random() * (canvas.width - 40) / 20) * 20;
+            const isBig = Math.random() < 0.2;
+
+            // Ensure container is not placed too close to the truck
+            while (truck.some(segment => 
+                Math.abs(segment.top - top) < 40 && 
+                Math.abs(segment.left - left) < 40
+            )) {
+                top = Math.round(Math.random() * (canvas.height - 40) / 20) * 20;
+                left = Math.round(Math.random() * (canvas.width - 40) / 20) * 20;
+            }
+
+            container = { top, left, isBig };
+        }
+
+        function updateTruck() {
+            const head = Object.assign({}, truck[0]);
+
+            switch (direction) {
+                case 'LEFT':
+                    head.left -= stepSize;
+                    break;
+                case 'RIGHT':
+                    head.left += stepSize;
+                    break;
+                case 'DOWN':
+                    head.top += 20;
+                    break;
+                case 'UP':
+                    head.top -= 20;
+                    break;
+            }
+
+            // Check if truck collides with itself or hits the boundary
+            if (
+                head.top < 0 ||
+                head.left < 0 ||
+                head.top >= canvas.height ||
+                head.left >= canvas.width ||
+                truck.slice(1).some(dot => Math.abs(dot.top - head.top) < 10 && Math.abs(dot.left - head.left) < 10)
+            ) {
+                gameOver();
+                return;
+            }
+
+            truck.unshift(head);
+
+            // Improved container collision detection
+            if (container) {
+                const containerWidth = container.isBig ? 42 : 20;
+                const containerHeight = 20;
+                
+                // Check if the truck's head overlaps with the container
+                const overlap = !(
+                    head.left + 23 <= container.left ||
+                    head.left >= container.left + containerWidth ||
+                    head.top + 20 <= container.top ||
+                    head.top >= container.top + containerHeight
+                );
+
+                if (overlap) {
+                    if (container.isBig) {
+                        const tail = Object.assign({}, truck[truck.length - 1]);
+                        truck.push(tail); // Increase length by an additional unit
+                    }
+                    updateScore();
+                    updateContainer();
+                } else {
+                    truck.pop();
+                }
+            } else {
+                truck.pop();
+            }
+        }
+
+        function gameOver() {
+            // Get the high scores from local storage
+            let highScores = JSON.parse(localStorage.getItem('truck-snake-highScores')) || [];
+            
+            // Determine the lowest high score
+            if (highScores.length > 0) {
+                lowestHighScore = highScores[highScores.length - 1].score;
+            } else {
+                lowestHighScore = 0;
+            }
+
+            // Check if the highest score is higher than the lowest high score
+            if (highestScore > lowestHighScore) {
+                document.getElementById('highScoreForm').style.display = 'block';
+            } else {
+                displayHighScores();
+            }
+            clearInterval(myInterval);
+            document.getElementById('gameOver').style.display = 'block';
+        }
+
+        function renderTruck() {
+            let truckImg = imgHead;
+            if (direction === 'LEFT') {
+                truckImg = imgHeadLeft
+            }
+
+            context.drawImage(truckImg, truck[0].left, truck[0].top, 23, 20);
+
+            let adjustment = 0;
+            // Start from the second block of the truck
+            for (let i = 1; i < truck.length; i++) {
+                if (i == 1 && direction === 'LEFT') {
+                    adjustment = 3;
+                }
+                context.drawImage(imgBody, truck[i].left + adjustment, truck[i].top, 20, 20);
+            }
+        }
+
+        function draw() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            renderTruck();
+
+            if (container) {
+                let img = imgContainerSmall
+                if (container.isBig) {
+                    img = imgContainerLarge
+                }
+                context.drawImage(img, container.left, container.top, container.isBig ? 42 : 20, container.isBig ? 20 : 20);
+            }
+        }
+
+        function updateScore() {
+            score += 1; // Increment score
+            document.getElementById('score').innerText = `Score: ${score}`;
+            if (score > highestScore) {
+                highestScore = score; // Update highest score if current score is higher
+            }
+            // Increase speed slightly every 5 points
+            if (score % 5 === 0) {
+                intervalTime = Math.max(50, intervalTime - 20); // Decrease interval time but not below 50ms
+                restartInterval();
+            }
+        }
+
+        function restartInterval() {
+            clearInterval(myInterval);
+            myInterval = setInterval(() => {
+                updateTruck();
+                draw();
+            }, intervalTime);
+        }
+
+        function saveHighScore() {
+            let playerNameInput = document.getElementById('playerNameInput');
+            let playerName = playerNameInput.value.trim();
+            if (playerName !== '') {
+                let highScores = JSON.parse(localStorage.getItem('truck-snake-highScores')) || [];
+                highScores.push({ name: playerName, score: highestScore });
+                highScores.sort((a, b) => b.score - a.score);
+                highScores = highScores.slice(0, 10);
+                localStorage.setItem('truck-snake-highScores', JSON.stringify(highScores));
+                displayHighScores();
+                document.getElementById('highScoreForm').style.display = 'none';
+            }
+        }
+
+        function displayHighScores() {
+            // Get the high scores from local storage
+            let highScores = JSON.parse(localStorage.getItem('truck-snake-highScores')) || [];
+            // Display the high scores in a list
+            let scoresList = document.getElementById('highScoresList'); // Replace with the ID of your high scores list element
+            scoresList.innerHTML = '';
+
+            if (highScores[highScores.length]) {
+                lowestHighScore = highScores[highScores.length];
+            }
+
+            highScores.forEach((score, index) => {
+                let li = document.createElement('li');
+                li.textContent = `${score.name} - ${score.score}`;
+                scoresList.appendChild(li);
+            });
+        }
+
+        function clearGame() {
+            truck = [{ top: 50, left: 50 }];
+            score = 0; // Reset score
+            document.getElementById('score').innerText = `Score: ${score}`;
+            direction = 'RIGHT';
+            intervalTime = 200; // Reset interval time
+        }
+
+        window.addEventListener('keydown', e => {
+            switch (e.key) {
+                case 'ArrowLeft':
+                    direction = 'LEFT';
+                    break;
+                case 'ArrowRight':
+                    direction = 'RIGHT';
+                    break;
+                case 'ArrowDown':
+                    direction = 'DOWN';
+                    break;
+                case 'ArrowUp':
+                    direction = 'UP';
+                    break;
+            }
+        });
+
+        highScoreForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            saveHighScore();
+        });
+
+        function restartGame() {
+            container = null;
+            updateContainer();
+            document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('highScoreForm').style.display = 'none';
+            highestScore = 0; // Reset highest score
+            clearGame();
+            startGame();
+        }
+
+        function startGame() {
+            displayHighScores();
+            updateContainer();
+            Promise.all([imgHead.onload, imgBody.onload, imgHeadLeft.onload, imgContainerLarge.onload, imgContainerSmall.onload]).then(() => {
+                myInterval = setInterval(() => {
+                    updateTruck();
+                    draw();
+                }, intervalTime);
+            });
+        }
+
+        startGame();
+    </script>
+</body>
+
+</html>
