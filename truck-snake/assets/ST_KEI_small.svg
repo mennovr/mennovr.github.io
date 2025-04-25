@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-    <!-- Container body -->
-    <rect x="0" y="0" width="20" height="20" fill="#FF5722"/>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <!-- Container body (top-down view) -->
+    <rect x="4" y="4" width="24" height="24" fill="#FF5722"/>
     <!-- Container details -->
-    <rect x="2" y="2" width="16" height="16" fill="#E64A19"/>
+    <rect x="6" y="6" width="20" height="20" fill="#E64A19"/>
     <!-- Container lines -->
-    <rect x="2" y="9" width="16" height="2" fill="#FF5722"/>
-    <rect x="9" y="2" width="2" height="16" fill="#FF5722"/>
+    <rect x="6" y="14" width="20" height="4" fill="#FF5722"/>
+    <rect x="14" y="6" width="4" height="20" fill="#FF5722"/>
+    <!-- Container corners -->
+    <rect x="4" y="4" width="2" height="2" fill="#FF5722"/>
+    <rect x="26" y="4" width="2" height="2" fill="#FF5722"/>
+    <rect x="4" y="26" width="2" height="2" fill="#FF5722"/>
+    <rect x="26" y="26" width="2" height="2" fill="#FF5722"/>
 </svg> 

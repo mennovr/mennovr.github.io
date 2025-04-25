@@ -26,8 +26,8 @@
         }
 
         .canvas-container {
-            height: 400px;
-            width: 400px;
+            height: 640px;
+            width: 640px;
             position: relative;
         }
 
@@ -52,7 +52,7 @@
         .score-container {
             margin-left: 30px;
             min-width: 250px;
-            max-height: 400px;
+            max-height: 640px;
             overflow-y: auto;
         }
 
@@ -127,7 +127,7 @@
 <body>
     <div class="game-container">
         <div class="canvas-container">
-            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <canvas id="gameCanvas" width="640" height="640"></canvas>
             <div id="gameOver">
                 <h2>Game Over</h2>
                 <button onclick="restartGame()">Retry</button>
@@ -149,12 +149,12 @@
         const canvas = document.getElementById('gameCanvas');
         const context = canvas.getContext('2d');
 
-        let truck = [{ top: 50, left: 50 }];
+        let truck = [{ top: 160, left: 160 }];
         let direction = 'RIGHT';
         let container = null;
         let myInterval = null;
         let score = 0;
-        let highestScore = 0; // Variable to store the highest score during the game session
+        let highestScore = 0;
         let lowestHighScore = 0;
         let imgHead = new Image();
         let imgHeadLeft = new Image();
@@ -168,21 +168,21 @@
         imgContainerSmall.src = 'assets/ST_KEI_small.svg';
         imgContainerLarge.src = 'assets/OSBX_small.svg';
         
-        let intervalTime = 200; // Initial interval time in milliseconds
-        const stepSize = 20; // Step size to match the width of the truck image
+        let intervalTime = 200;
+        const stepSize = 32; // Updated to match new sprite size
 
         function updateContainer() {
-            let top = Math.round(Math.random() * (canvas.height - 40) / 20) * 20;
-            let left = Math.round(Math.random() * (canvas.width - 40) / 20) * 20;
+            let top = Math.round(Math.random() * (canvas.height - 64) / 32) * 32;
+            let left = Math.round(Math.random() * (canvas.width - 64) / 32) * 32;
             const isBig = Math.random() < 0.2;
 
             // Ensure container is not placed too close to the truck
             while (truck.some(segment => 
-                Math.abs(segment.top - top) < 40 && 
-                Math.abs(segment.left - left) < 40
+                Math.abs(segment.top - top) < 64 && 
+                Math.abs(segment.left - left) < 64
             )) {
-                top = Math.round(Math.random() * (canvas.height - 40) / 20) * 20;
-                left = Math.round(Math.random() * (canvas.width - 40) / 20) * 20;
+                top = Math.round(Math.random() * (canvas.height - 64) / 32) * 32;
+                left = Math.round(Math.random() * (canvas.width - 64) / 32) * 32;
             }
 
             container = { top, left, isBig };
@@ -212,7 +212,7 @@
                 head.left < 0 ||
                 head.top >= canvas.height ||
                 head.left >= canvas.width ||
-                truck.slice(1).some(dot => Math.abs(dot.top - head.top) < 10 && Math.abs(dot.left - head.left) < 10)
+                truck.slice(1).some(dot => Math.abs(dot.top - head.top) < 16 && Math.abs(dot.left - head.left) < 16)
             ) {
                 gameOver();
                 return;
@@ -222,21 +222,21 @@
 
             // Improved container collision detection
             if (container) {
-                const containerWidth = container.isBig ? 40 : 20;
-                const containerHeight = 20;
+                const containerWidth = container.isBig ? 64 : 32;
+                const containerHeight = 32;
                 
                 // Check if the truck's head overlaps with the container
                 const overlap = !(
-                    head.left + 20 <= container.left ||
+                    head.left + 32 <= container.left ||
                     head.left >= container.left + containerWidth ||
-                    head.top + 20 <= container.top ||
+                    head.top + 32 <= container.top ||
                     head.top >= container.top + containerHeight
                 );
 
                 if (overlap) {
                     if (container.isBig) {
                         const tail = Object.assign({}, truck[truck.length - 1]);
-                        truck.push(tail); // Increase length by an additional unit
+                        truck.push(tail);
                     }
                     updateScore();
                     updateContainer();
@@ -275,11 +275,11 @@
                 truckImg = imgHeadLeft
             }
 
-            context.drawImage(truckImg, truck[0].left, truck[0].top, 20, 20);
+            context.drawImage(truckImg, truck[0].left, truck[0].top, 32, 32);
 
             // Start from the second block of the truck
             for (let i = 1; i < truck.length; i++) {
-                context.drawImage(imgBody, truck[i].left, truck[i].top, 20, 20);
+                context.drawImage(imgBody, truck[i].left, truck[i].top, 32, 32);
             }
         }
 
@@ -293,7 +293,7 @@
                 if (container.isBig) {
                     img = imgContainerLarge
                 }
-                context.drawImage(img, container.left, container.top, container.isBig ? 42 : 20, container.isBig ? 20 : 20);
+                context.drawImage(img, container.left, container.top, container.isBig ? 64 : 32, 32);
             }
         }
 
@@ -351,7 +351,7 @@
         }
 
         function clearGame() {
-            truck = [{ top: 50, left: 50 }];
+            truck = [{ top: 160, left: 160 }];
             score = 0; // Reset score
             document.getElementById('score').innerText = `Score: ${score}`;
             direction = 'RIGHT';
