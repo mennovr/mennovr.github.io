@@ -162,14 +162,14 @@
         let imgContainerSmall = new Image();
         let imgContainerLarge = new Image();
         let highScoreForm = document.getElementById('highScoreForm');
-        imgHead.src = 'assets/truck_r.png';
-        imgBody.src = 'assets/trailer.png';
-        imgHeadLeft.src = 'assets/truck_l.png';
-        imgContainerSmall.src = 'assets/ST_KEI_small.png';
-        imgContainerLarge.src = 'assets/OSBX_small.png';
+        imgHead.src = 'assets/truck_r.svg';
+        imgBody.src = 'assets/trailer.svg';
+        imgHeadLeft.src = 'assets/truck_l.svg';
+        imgContainerSmall.src = 'assets/ST_KEI_small.svg';
+        imgContainerLarge.src = 'assets/OSBX_small.svg';
         
         let intervalTime = 200; // Initial interval time in milliseconds
-        const stepSize = 23; // Step size to match the width of the truck image
+        const stepSize = 20; // Step size to match the width of the truck image
 
         function updateContainer() {
             let top = Math.round(Math.random() * (canvas.height - 40) / 20) * 20;
@@ -199,10 +199,10 @@
                     head.left += stepSize;
                     break;
                 case 'DOWN':
-                    head.top += 20;
+                    head.top += stepSize;
                     break;
                 case 'UP':
-                    head.top -= 20;
+                    head.top -= stepSize;
                     break;
             }
 
@@ -222,12 +222,12 @@
 
             // Improved container collision detection
             if (container) {
-                const containerWidth = container.isBig ? 42 : 20;
+                const containerWidth = container.isBig ? 40 : 20;
                 const containerHeight = 20;
                 
                 // Check if the truck's head overlaps with the container
                 const overlap = !(
-                    head.left + 23 <= container.left ||
+                    head.left + 20 <= container.left ||
                     head.left >= container.left + containerWidth ||
                     head.top + 20 <= container.top ||
                     head.top >= container.top + containerHeight
@@ -275,15 +275,11 @@
                 truckImg = imgHeadLeft
             }
 
-            context.drawImage(truckImg, truck[0].left, truck[0].top, 23, 20);
+            context.drawImage(truckImg, truck[0].left, truck[0].top, 20, 20);
 
-            let adjustment = 0;
             // Start from the second block of the truck
             for (let i = 1; i < truck.length; i++) {
-                if (i == 1 && direction === 'LEFT') {
-                    adjustment = 3;
-                }
-                context.drawImage(imgBody, truck[i].left + adjustment, truck[i].top, 20, 20);
+                context.drawImage(imgBody, truck[i].left, truck[i].top, 20, 20);
             }
         }
 

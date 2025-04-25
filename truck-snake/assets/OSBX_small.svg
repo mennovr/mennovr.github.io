@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40" height="20" viewBox="0 0 40 20" xmlns="http://www.w3.org/2000/svg">
+    <!-- Container body -->
+    <rect x="0" y="0" width="40" height="20" fill="#2196F3"/>
+    <!-- Container details -->
+    <rect x="2" y="2" width="36" height="16" fill="#1976D2"/>
+    <!-- Container lines -->
+    <rect x="2" y="9" width="36" height="2" fill="#2196F3"/>
+    <rect x="20" y="2" width="2" height="16" fill="#2196F3"/>
+</svg> 
