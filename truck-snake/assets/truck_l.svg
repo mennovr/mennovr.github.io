@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-    <!-- Truck body (top-down view) -->
-    <rect x="4" y="8" width="24" height="16" fill="#4CAF50"/>
-    <!-- Truck cabin -->
-    <rect x="16" y="4" width="12" height="12" fill="#45a049"/>
-    <!-- Windows -->
-    <rect x="18" y="6" width="8" height="4" fill="#87CEEB"/>
+    <!-- Truck cab (facing left) -->
+    <rect x="4" y="6" width="10" height="20" fill="#2E7D32" rx="1"/>
+    <rect x="5" y="7" width="8" height="18" fill="#388E3C" rx="1"/>
+    
+    <!-- Windshield -->
+    <rect x="5" y="10" width="2" height="12" fill="#B3E5FC"/>
+    
+    <!-- Cab details -->
+    <rect x="7" y="11" width="6" height="2" fill="#1B5E20"/>
+    <rect x="7" y="19" width="6" height="2" fill="#1B5E20"/>
+    
+    <!-- Truck bed -->
+    <rect x="12" y="8" width="14" height="16" fill="#43A047"/>
+    <rect x="13" y="9" width="12" height="14" fill="#4CAF50"/>
+    
+    <!-- Bed lines -->
+    <line x1="13" y1="12" x2="25" y2="12" stroke="#388E3C" stroke-width="1"/>
+    <line x1="13" y1="16" x2="25" y2="16" stroke="#388E3C" stroke-width="1"/>
+    <line x1="13" y1="20" x2="25" y2="20" stroke="#388E3C" stroke-width="1"/>
+    
     <!-- Wheels -->
-    <rect x="6" y="20" width="4" height="8" fill="#333"/>
-    <rect x="22" y="20" width="4" height="8" fill="#333"/>
+    <circle cx="9" cy="8" r="2.5" fill="#424242"/>
+    <circle cx="9" cy="24" r="2.5" fill="#424242"/>
+    <circle cx="9" cy="8" r="1.5" fill="#757575"/>
+    <circle cx="9" cy="24" r="1.5" fill="#757575"/>
+    
+    <circle cx="22" cy="8" r="2.5" fill="#424242"/>
+    <circle cx="22" cy="24" r="2.5" fill="#424242"/>
+    <circle cx="22" cy="8" r="1.5" fill="#757575"/>
+    <circle cx="22" cy="24" r="1.5" fill="#757575"/>
+    
     <!-- Headlights -->
-    <rect x="4" y="12" width="4" height="2" fill="#FFD700"/>
-</svg> 
+    <rect x="3" y="11" width="2" height="3" fill="#FDD835" rx="0.5"/>
+    <rect x="3" y="18" width="2" height="3" fill="#FDD835" rx="0.5"/>
+</svg>

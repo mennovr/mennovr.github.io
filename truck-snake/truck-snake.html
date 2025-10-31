@@ -175,13 +175,19 @@
         let gameStarted = false;
         let imgHead = new Image();
         let imgHeadLeft = new Image();
-        let imgBody = new Image();
+        let imgHeadUp = new Image();
+        let imgHeadDown = new Image();
+        let imgBodyHorizontal = new Image();
+        let imgBodyVertical = new Image();
         let imgContainerSmall = new Image();
         let imgContainerLarge = new Image();
         let highScoreForm = document.getElementById('highScoreForm');
         imgHead.src = 'assets/truck_r.svg';
-        imgBody.src = 'assets/trailer.svg';
+        imgBodyHorizontal.src = 'assets/trailer_h.svg';
+        imgBodyVertical.src = 'assets/trailer_v.svg';
         imgHeadLeft.src = 'assets/truck_l.svg';
+        imgHeadUp.src = 'assets/truck_u.svg';
+        imgHeadDown.src = 'assets/truck_d.svg';
         imgContainerSmall.src = 'assets/ST_KEI_small.svg';
         imgContainerLarge.src = 'assets/OSBX_small.svg';
         
@@ -298,13 +304,38 @@
             let truckImg = imgHead;
             if (direction === 'LEFT') {
                 truckImg = imgHeadLeft;
+            } else if (direction === 'UP') {
+                truckImg = imgHeadUp;
+            } else if (direction === 'DOWN') {
+                truckImg = imgHeadDown;
             }
 
             context.drawImage(truckImg, truck[0].left, truck[0].top, 32, 32);
 
             // Start from the second block of the truck
             for (let i = 1; i < truck.length; i++) {
-                context.drawImage(imgBody, truck[i].left, truck[i].top, 32, 32);
+                // Determine trailer orientation based on adjacent segments
+                let trailerImg = imgBodyHorizontal;
+                
+                if (i < truck.length - 1) {
+                    // Check direction between current segment and next segment
+                    const dx = truck[i + 1].left - truck[i].left;
+                    const dy = truck[i + 1].top - truck[i].top;
+                    
+                    if (dy !== 0) {
+                        trailerImg = imgBodyVertical;
+                    }
+                } else {
+                    // For the last segment, check direction from previous segment
+                    const dx = truck[i].left - truck[i - 1].left;
+                    const dy = truck[i].top - truck[i - 1].top;
+                    
+                    if (dy !== 0) {
+                        trailerImg = imgBodyVertical;
+                    }
+                }
+                
+                context.drawImage(trailerImg, truck[i].left, truck[i].top, 32, 32);
             }
         }
 
@@ -429,7 +460,7 @@
             displayHighScores();
             
             // Wait for all images to load
-            const imagePromises = [imgHead, imgBody, imgHeadLeft, imgContainerLarge, imgContainerSmall].map(img => {
+            const imagePromises = [imgHead, imgBodyHorizontal, imgBodyVertical, imgHeadLeft, imgHeadUp, imgHeadDown, imgContainerLarge, imgContainerSmall].map(img => {
                 if (img.complete) {
                     return Promise.resolve();
                 }

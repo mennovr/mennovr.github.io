@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-    <!-- Trailer body -->
+    <!-- Trailer body (horizontal orientation) -->
     <rect x="6" y="8" width="20" height="16" fill="#43A047"/>
     <rect x="7" y="9" width="18" height="14" fill="#4CAF50"/>
     
-    <!-- Trailer cargo lines -->
+    <!-- Trailer cargo lines (horizontal) -->
     <line x1="7" y1="12" x2="25" y2="12" stroke="#388E3C" stroke-width="1"/>
     <line x1="7" y1="16" x2="25" y2="16" stroke="#388E3C" stroke-width="1"/>
     <line x1="7" y1="20" x2="25" y2="20" stroke="#388E3C" stroke-width="1"/>

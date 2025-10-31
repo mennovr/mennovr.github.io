@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <!-- Trailer body (vertical orientation) -->
+    <rect x="8" y="6" width="16" height="20" fill="#43A047"/>
+    <rect x="9" y="7" width="14" height="18" fill="#4CAF50"/>
+    
+    <!-- Trailer cargo lines (vertical) -->
+    <line x1="12" y1="7" x2="12" y2="25" stroke="#388E3C" stroke-width="1"/>
+    <line x1="16" y1="7" x2="16" y2="25" stroke="#388E3C" stroke-width="1"/>
+    <line x1="20" y1="7" x2="20" y2="25" stroke="#388E3C" stroke-width="1"/>
+    
+    <!-- Horizontal lines -->
+    <line x1="9" y1="13" x2="23" y2="13" stroke="#388E3C" stroke-width="1"/>
+    <line x1="9" y1="19" x2="23" y2="19" stroke="#388E3C" stroke-width="1"/>
+    
+    <!-- Wheels -->
+    <circle cx="8" cy="10" r="2.5" fill="#424242"/>
+    <circle cx="24" cy="10" r="2.5" fill="#424242"/>
+    <circle cx="8" cy="10" r="1.5" fill="#757575"/>
+    <circle cx="24" cy="10" r="1.5" fill="#757575"/>
+    
+    <circle cx="8" cy="22" r="2.5" fill="#424242"/>
+    <circle cx="24" cy="22" r="2.5" fill="#424242"/>
+    <circle cx="8" cy="22" r="1.5" fill="#757575"/>
+    <circle cx="24" cy="22" r="1.5" fill="#757575"/>
+    
+    <!-- Hitch connection point -->
+    <rect x="7" y="13" width="2" height="6" fill="#2E7D32" rx="1"/>
+</svg>
